@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name="POSTS")
-public class post extends BaseEntity {
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="POST_ID")
@@ -24,6 +24,9 @@ public class post extends BaseEntity {
 
     @Column(name="POST_CONTENT")
     private String postContent;
+
+    @Column(name="USER_NAME")
+    private String userName;
 
     @Column(name="POST_IMG_PATH")
     private String postImgPath;
