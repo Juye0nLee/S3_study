@@ -4,6 +4,7 @@ import com.study.spring.domain.Post;
 import com.study.spring.post.dto.PostCreateDto;
 import com.study.spring.post.repository.PostRepository;
 import com.study.spring.util.response.CustomApiResponse;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+@Builder
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
