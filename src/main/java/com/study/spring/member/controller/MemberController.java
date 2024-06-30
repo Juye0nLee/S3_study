@@ -1,6 +1,7 @@
 package com.study.spring.member.controller;
 
 
+import com.study.spring.member.dto.LoginDto;
 import com.study.spring.member.dto.MemberCreateDto;
 import com.study.spring.member.service.MemberService;
 import com.study.spring.util.response.CustomApiResponse;
@@ -24,5 +25,10 @@ public class MemberController {
     }
 
     //로그인
+    @PostMapping("/login")
+    public ResponseEntity<CustomApiResponse<?>> login(@RequestBody LoginDto.Req loginDto){
+        ResponseEntity<CustomApiResponse<?>> login = memberService.login(loginDto);
+        return login;
+    }
 
 }
