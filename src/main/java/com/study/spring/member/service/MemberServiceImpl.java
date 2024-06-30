@@ -23,7 +23,7 @@ public class MemberServiceImpl implements MemberService {
         //해당 유저가 이미 존재하는지 확인
         String name = memberCreateDto.getMemberId();
         Optional<Member> findMember = memberRepository.findByMemberId(name);
-        if (findMember.isPresent()) {
+        if (findMember.isEmpty()) {
 
             CustomApiResponse<?> failResponse = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 회원입니다.");
             return new ResponseEntity<>(failResponse, HttpStatus.BAD_REQUEST);
@@ -53,22 +53,21 @@ public class MemberServiceImpl implements MemberService {
         Optional<Member> findMember = memberRepository.findByMemberId(loginDto.getMemberId());
 
         // 존재하지 않는 회원인지 확인
-        if (!findMember.isPresent()) {
+        if (findMember.isEmpty()) {
             CustomApiResponse<?> failResponse = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "존재하지 않는 회원입니다.");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(failResponse);
-        } else {
-            // 비밀번호가 일치하는지 확인
-            if (!loginDto.getPassword().equals(findMember.get().getPassword())) {
-                return ResponseEntity
-                        .status(HttpStatus.UNAUTHORIZED)
-                        .body(CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "비밀번호가 일치하지 않습니다."));
-            }
-
-            // 로그인 성공
-            Member member = findMember.get();
-            CustomApiResponse<?> successResponse = CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"로그인에 성공했습니다.");
-            return ResponseEntity.ok(successResponse);
         }
+        // 비밀번호가 일치하는지 확인
+        if (!loginDto.getPassword().equals(findMember.get().getPassword())) {
+            return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body(CustomApiResponse.createFailWithout(HttpStatus.UNAUTHORIZED.value(), "비밀번호가 일치하지 않습니다."));
+        }
+
+        // 로그인 성공
+        Member member = findMember.get();
+        CustomApiResponse<?> successResponse = CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"로그인에 성공했습니다.");
+        return ResponseEntity.ok(successResponse);
     }
 
 }

@@ -19,6 +19,10 @@ public class Post extends BaseEntity {
     @Column(name="POST_ID")
     private Long postId;
 
+    @ManyToOne
+    @JoinColumn(name="ID")
+    private Member member;
+
     @Column(name="POST_TITLE")
     private String postTitle;
 

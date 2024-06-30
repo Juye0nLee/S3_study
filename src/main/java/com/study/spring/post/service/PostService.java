@@ -6,4 +6,6 @@ import org.springframework.http.ResponseEntity;
 
 public interface PostService {
     ResponseEntity<CustomApiResponse<?>> createPost(PostCreateDto.Req postCreateDto);
+
+    ResponseEntity<CustomApiResponse<?>> getPost(Long postId);
 }
