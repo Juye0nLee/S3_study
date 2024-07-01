@@ -14,21 +14,21 @@ public class PostCreateDto {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PROTECTED)
     public static class Req{
-        @NotEmpty(message = "작성자 이름은 비어있을 수 없음")
-        private String userName;
 
-        @NotEmpty
+        @NotEmpty(message = "작성자의 기본키는 필수입니다.")
+        private Long id;
+
+        @NotEmpty(message = "제목을 입력해주세요")
         private String title;
 
-        @NotEmpty
+        @NotEmpty(message = "내용을 입력해주세요")
         private String content;
 
-        @NotEmpty
+        @NotEmpty(message = "이미지를 넣어주세요")
         private String pathImgPath;
 
         public Post toEntity(){
             return Post.builder()
-                    .userName(userName)
                     .postTitle(title)
                     .postContent(content)
                     .postImgPath(pathImgPath)

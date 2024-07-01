@@ -18,13 +18,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberRepository memberRepository;
+
+    //회원가입
     @Override
     public ResponseEntity<CustomApiResponse<?>> signup(MemberCreateDto.Req memberCreateDto) {
         //해당 유저가 이미 존재하는지 확인
         String name = memberCreateDto.getMemberId();
         Optional<Member> findMember = memberRepository.findByMemberId(name);
-        if (findMember.isEmpty()) {
-
+        if (findMember.isPresent()) {
             CustomApiResponse<?> failResponse = CustomApiResponse.createFailWithout(HttpStatus.BAD_REQUEST.value(), "이미 존재하는 회원입니다.");
             return new ResponseEntity<>(failResponse, HttpStatus.BAD_REQUEST);
         }

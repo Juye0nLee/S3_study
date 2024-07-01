@@ -29,9 +29,11 @@ public class Post extends BaseEntity {
     @Column(name="POST_CONTENT")
     private String postContent;
 
-    @Column(name="USER_NAME")
-    private String userName;
-
     @Column(name="POST_IMG_PATH")
     private String postImgPath;
+
+    //연관관계 설정
+    public void createPost(Member member){
+        this.member = member;
+    }
 }
