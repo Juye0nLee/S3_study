@@ -1,6 +1,7 @@
 package com.study.spring.member.dto;
 
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -13,19 +14,19 @@ public class MemberCreateDto {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class Req {
-        @NotEmpty(message = "아이디를 입력해주세요")
+        @NotNull(message = "아이디를 입력해주세요")
         private String memberId;
 
-        @NotEmpty(message = "비밀번호를 입력해주세요")
+        @NotNull(message = "비밀번호를 입력해주세요")
         private String password;
 
-        @NotEmpty(message = "핸드폰 번호를 입력해주세요")
+        @NotNull(message = "핸드폰 번호를 입력해주세요")
         private String phone;
 
-        @NotEmpty(message = "이메일을 입력해주세요")
+        @NotNull(message = "이메일을 입력해주세요")
         private String email;
 
-        @NotEmpty(message = "프로필 이미지를 설정해주세요")
+        @NotNull(message = "프로필 이미지를 설정해주세요")
         private String profileImg;
     }
 }

@@ -5,6 +5,7 @@ import com.study.spring.domain.Post;
 import com.study.spring.post.dto.PostCreateDto;
 import com.study.spring.post.service.PostService;
 import com.study.spring.util.response.CustomApiResponse;
+import jakarta.validation.Valid;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +18,9 @@ public class PostController {
     private final PostService postService;
 
     //게시글 작성
-    @PostMapping
-    public ResponseEntity<CustomApiResponse<?>> createPost(@RequestBody PostCreateDto.Req postCreateDto) {
+    @PostMapping(consumes = {"multipart/form-data"})
+    public ResponseEntity<CustomApiResponse<?>> createPost(
+            @Valid @ModelAttribute PostCreateDto.Req postCreateDto) {
         ResponseEntity<CustomApiResponse<?>> post = postService.createPost(postCreateDto);
         return post;
     }
