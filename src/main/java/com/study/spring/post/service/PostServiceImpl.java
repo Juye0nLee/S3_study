@@ -85,9 +85,9 @@ public class PostServiceImpl implements PostService {
 
         //응답할 때 제목, 내용, 이미지 , 작성자를 줘야함
         PostListDto.PostDto postResponse = new PostListDto.PostDto(
-                member.getMemberId(),
                 post.getPostTitle(),
                 post.getPostContent(),
+                member.getMemberId(),
                 post.getPostImgPath()
         );
         CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(),postResponse,"게시물 조회 성공");
