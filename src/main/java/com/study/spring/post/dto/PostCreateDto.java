@@ -1,11 +1,15 @@
 package com.study.spring.post.dto;
 
 import com.study.spring.domain.Post;
+import com.study.spring.util.entity.ImageEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class PostCreateDto {
 
@@ -25,13 +29,15 @@ public class PostCreateDto {
         @NotNull(message = "내용을 입력해주세요")
         private String content;
 
-        private MultipartFile postImgPath;
+        private List<MultipartFile> postImgPath;
 
-        public Post toEntity(String postImgPath){
+        public Post toEntity(List<String> postImgPath){
             return Post.builder()
                     .postTitle(title)
                     .postContent(content)
-                    .postImgPath(postImgPath)
+                    .postImgPath(postImgPath.stream()
+                            .map(ImageEntity::new)
+                            .collect(Collectors.toList()))
                     .build();
         }
     }

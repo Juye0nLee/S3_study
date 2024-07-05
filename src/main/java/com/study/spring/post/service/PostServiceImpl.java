@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,9 +44,9 @@ public class PostServiceImpl implements PostService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(failResponse);
             }
 
-            String imgPath = null;
+            List<String> imgPath = null;
             if(postCreateDto.getPostImgPath() != null && !postCreateDto.getPostImgPath().isEmpty()){
-                imgPath = s3UploadService.upload(postCreateDto.getPostImgPath());
+                imgPath = s3UploadService.upload(postCreateDto.getPostImgPath(),"post-images");
             }
 
             Post newPost = postCreateDto.toEntity(imgPath);
@@ -88,7 +89,7 @@ public class PostServiceImpl implements PostService {
                 post.getPostTitle(),
                 post.getPostContent(),
                 member.getMemberId(),
-                post.getPostImgPath()
+                post.getPostImgPath() != null && !post.getPostImgPath().isEmpty() ? post.getPostImgPath().get(0).getImageUrl() : null // 첫 번째 이미지 경로를 사용
         );
         CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(),postResponse,"게시물 조회 성공");
         return ResponseEntity.ok(res);
