@@ -7,6 +7,8 @@ import com.study.spring.member.repository.MemberRepository;
 import com.study.spring.post.dto.PostCreateDto;
 import com.study.spring.post.dto.PostListDto;
 import com.study.spring.post.repository.PostRepository;
+import com.study.spring.util.entity.ImageEntity;
+import com.study.spring.util.repository.ImageRepository;
 import com.study.spring.util.response.CustomApiResponse;
 import com.study.spring.util.service.S3UploadService;
 import lombok.Builder;
@@ -16,6 +18,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,7 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final ImageRepository imageRepository;
 
     private final S3UploadService s3UploadService;
     private final AmazonS3 amazonS3;
@@ -44,15 +48,26 @@ public class PostServiceImpl implements PostService {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(failResponse);
             }
 
-            List<String> imgPath = null;
+            Post post = Post.builder()
+                    .member(findMember.get())
+                    .postTitle(postCreateDto.getTitle())
+                    .postContent(postCreateDto.getContent())
+                    .build();
+
+            post.createPost(findMember.get());
+            postRepository.save(post);
+
+            String imgPath = null;
             if(postCreateDto.getPostImgPath() != null && !postCreateDto.getPostImgPath().isEmpty()){
-                imgPath = s3UploadService.upload(postCreateDto.getPostImgPath(),"post-images");
+                for(MultipartFile file : postCreateDto.getPostImgPath()){
+                    imgPath = s3UploadService.upload(file,"post_images");
+                    ImageEntity newImage = ImageEntity.builder()
+                            .post(post)
+                            .imageUrl(imgPath)
+                            .build();
+                    imageRepository.save(newImage);
+                }
             }
-
-            Post newPost = postCreateDto.toEntity(imgPath);
-            newPost.createPost(findMember.get()); //연관관계 설정
-            postRepository.save(newPost);
-
             CustomApiResponse<?> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"게시물 작성 성공");
             return ResponseEntity.status(HttpStatus.OK).body(res);
         }
@@ -84,14 +99,14 @@ public class PostServiceImpl implements PostService {
         Post post = findPost.get();
         Member member = findMember.get();
 
-        //응답할 때 제목, 내용, 이미지 , 작성자를 줘야함
+/*        //응답할 때 제목, 내용, 이미지 , 작성자를 줘야함
         PostListDto.PostDto postResponse = new PostListDto.PostDto(
                 post.getPostTitle(),
                 post.getPostContent(),
                 member.getMemberId(),
                 post.getPostImgPath() != null && !post.getPostImgPath().isEmpty() ? post.getPostImgPath().get(0).getImageUrl() : null // 첫 번째 이미지 경로를 사용
-        );
-        CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(),postResponse,"게시물 조회 성공");
+        );*/
+        CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"게시물 조회 성공");
         return ResponseEntity.ok(res);
     }
 }

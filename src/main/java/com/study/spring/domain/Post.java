@@ -32,17 +32,9 @@ public class Post extends BaseEntity {
     @Column(name="POST_CONTENT")
     private String postContent;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ImageEntity> postImgPath;
-
     //연관관계 설정
-    public void createPost(Member member){
+    public void createPost(Member member ){
         this.member = member;
     }
 
-    //이미지 경로 추가
-    public void addImage(ImageEntity image){
-        postImgPath.add(image);
-        image.setPost(this);
-    }
 }

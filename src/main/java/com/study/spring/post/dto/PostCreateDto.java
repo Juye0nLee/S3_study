@@ -31,14 +31,5 @@ public class PostCreateDto {
 
         private List<MultipartFile> postImgPath;
 
-        public Post toEntity(List<String> postImgPath){
-            return Post.builder()
-                    .postTitle(title)
-                    .postContent(content)
-                    .postImgPath(postImgPath.stream()
-                            .map(ImageEntity::new)
-                            .collect(Collectors.toList()))
-                    .build();
-        }
     }
 }
