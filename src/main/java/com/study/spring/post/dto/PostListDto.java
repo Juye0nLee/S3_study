@@ -13,7 +13,7 @@ public class PostListDto {
         private String title;
         private String content;
         private String userName;
-        private String imageUrl;
+        private List<String> imageUrl;
     }
 
     @Getter

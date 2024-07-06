@@ -20,6 +20,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,20 +94,28 @@ public class PostServiceImpl implements PostService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(failResponse);
         }
 
+        //해당 게시물에 업로드한 이미지가 있는지 확인
+        List<ImageEntity> images = imageRepository.findByPost_PostId(postId);
+        List<String> imgPath = new ArrayList<>();
+        if(!images.isEmpty()){
+            for(ImageEntity image : images){
+                imgPath.add(image.getImageUrl());
+            }
+        }
         //게시물 작성자 이름 찾기
         Optional<Member> findMember = memberRepository.findById(findPost.get().getMember().getId());
 
         Post post = findPost.get();
         Member member = findMember.get();
 
-/*        //응답할 때 제목, 내용, 이미지 , 작성자를 줘야함
+        //응답할 때 제목, 내용, 이미지 , 작성자를 줘야함
         PostListDto.PostDto postResponse = new PostListDto.PostDto(
                 post.getPostTitle(),
                 post.getPostContent(),
                 member.getMemberId(),
-                post.getPostImgPath() != null && !post.getPostImgPath().isEmpty() ? post.getPostImgPath().get(0).getImageUrl() : null // 첫 번째 이미지 경로를 사용
-        );*/
-        CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(),null,"게시물 조회 성공");
+                imgPath
+        );
+        CustomApiResponse<PostListDto.PostDto> res = CustomApiResponse.createSuccess(HttpStatus.OK.value(),postResponse,"게시물 조회 성공");
         return ResponseEntity.ok(res);
     }
 }
