@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
             String imgPath = null;
             if(postCreateDto.getPostImgPath() != null && !postCreateDto.getPostImgPath().isEmpty()){
                 for(MultipartFile file : postCreateDto.getPostImgPath()){
-                    imgPath = s3UploadService.upload(file,"post_images");
+                    imgPath = s3UploadService.upload(file,"images");
                     ImageEntity newImage = ImageEntity.builder()
                             .post(post)
                             .imageUrl(imgPath)
